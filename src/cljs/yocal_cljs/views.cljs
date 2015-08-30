@@ -2,7 +2,8 @@
     (:require [re-frame.core :as re-frame]
               [reagent.core  :as    reagent]
               [re-com.util   :refer [item-for-id]]
-              [re-com.core :refer [horizontal-tabs h-box gap label button hyperlink-href v-box title p title]]))
+              [re-com.core :refer [horizontal-tabs h-box gap label button hyperlink-href v-box title p title]]
+              [yocal-cljs.auth.login :as login]))
 
 ;; ------------------ game board ---------------------------------------------
 (defn select-values [map ks]
@@ -135,26 +136,10 @@
          [:span {:class "icon-bar"}]]]
      [:div {:class "navbar-collapse collapse"}
        [:ul {:class "nav navbar-nav"}
-         [:li {:class (active-panel? :home-panel id)} [:a {:href "#/"} "Home"]]
-         [:li {:class (active-panel? :about-panel id)} [:a {:href "#/about"} "About"]]]]]]])
+         [:li {:class (active-panel? :home-panel id)} [:a {:href "#/home"} "Home"]]
+         [:li {:class (active-panel? :about-panel id)} [:a {:href "#/about"} "About"]]
+         [:li {:class (active-panel? :login-panel id)} [:a {:href "#/"} "Login"]]]]]]])
 
-;; --------------------
-(defn home-title []
-  (let [name (re-frame/subscribe [:name])]
-    (fn []
-      [title
-       :label (str "Hello from " @name ". This is the Home Page.")
-       :level :level1])))
-
-(defn link-to-about-page []
-  [hyperlink-href
-   :label "go to About Page"
-   :href "#/about"])
-
-(defn home-panel []
-  [v-box
-   :gap "1em"
-   :children [[home-title] [link-to-about-page]]])
 
 ;; --------------------
 (defn about-title []
@@ -171,11 +156,18 @@
   [v-box
    :gap "1em"
    :children [[about-title] [link-to-home-page]]])
-
+;; --------------------
+(def credentials (reagent/atom {:username "" :password ""}))
+(defn login-panel []
+ [v-box
+  :gap "1em"
+  :align :center
+  :children [[login/login-form-view credentials]]])
 ;; --------------------
 (defmulti panels identity)
 (defmethod panels :home-panel [] [game-board])
 (defmethod panels :about-panel [] [about-panel])
+(defmethod panels :login-panel [] [login-panel])
 (defmethod panels :default [] [:div])
 
 (defn main-panel []

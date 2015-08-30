@@ -25,7 +25,7 @@
      ;; The String for the game score pattern
      :game-score-string s/Str
      ;;
-     :active-panel (s/enum :home-panel :about-panel "")})
+     :active-panel (s/enum :home-panel :about-panel :login-panel "")})
 
 ;; -- Default app-db Value  ---------------------------------------------------
 ;;

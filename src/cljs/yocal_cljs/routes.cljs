@@ -18,12 +18,15 @@
   [resource]
   (secretary/dispatch! resource)
   (.setToken (History.) resource))
-  
+
 (defn app-routes []
   (secretary/set-config! :prefix "#")
   ;; --------------------
   ;; define routes here
   (defroute "/" []
+    (re-frame/dispatch [:set-active-panel :login-panel]))
+
+  (defroute "/home" []
     (re-frame/dispatch [:set-active-panel :home-panel]))
 
   (defroute "/about" []
