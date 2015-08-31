@@ -36,3 +36,8 @@
  :game-score-string
  (fn [db _]
   (reaction (:game-score-string @db))))
+
+(re-frame/register-sub
+  :auth-jwt
+  (fn [db _]
+    (reaction (:auth-jwt @db))))
