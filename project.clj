@@ -6,7 +6,8 @@
                  [re-com "0.6.1"]
                  [secretary "1.2.3"]
                  [prismatic/schema "0.4.3"]
-                 [reagent-reforms "0.4.0-SNAPSHOT"]]
+                 [reagent-reforms "0.4.0-SNAPSHOT"]
+                 [cljs-ajax "0.3.13"]]
 
   :source-paths ["src/clj"]
 
