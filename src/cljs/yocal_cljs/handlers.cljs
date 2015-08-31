@@ -1,7 +1,9 @@
 (ns yocal-cljs.handlers
     (:require [re-frame.core :refer [register-handler path trim-v after dispatch debug log-ex]]
               [yocal-cljs.db :as db]
-              [schema.core   :as s]))
+              [goog.crypt.base64 :as b64]
+              [schema.core   :as s]
+              [ajax.core :as ajax]))
 
 ;; -- Middleware --------------------------------------------------------------
 ;;
@@ -22,7 +24,12 @@
                       ])
 
 ;; -- Helpers -----------------------------------------------------------------
+(defn auth-header [crets]
+  (let [{:keys [username password]} crets]
+  (pr username password)
+  (str "Basic " (b64/encodeString (str username ":" password)))))
 
+;; -- Handlers ----------------------------------------------------------------------
 
 (register-handler
  :initialize-db
@@ -67,3 +74,64 @@
   [(path :game-score-string) debug trim-v]
   (fn [game-score-string [text]]
     text))
+
+(register-handler
+  :login
+  [debug]
+  (fn [db [_ crets]]
+    (ajax/POST "http://127.0.0.1:3001/user/token" {:headers        {;"Authorization" (auth-header crets)
+                                                                     "X-Requested-With" "XMLHttpRequest"}
+                                                   :params crets
+                                                   :format           :json
+                                                   :response-format  :json
+                                                   :keywords?        true
+                                                   :prefix           true
+                                                   :handler          #(dispatch [:login-response %1])
+                                                   :error-handler    #(dispatch [:login-failed %1])})
+    db))
+
+(register-handler
+  :login-response
+  (fn
+    ;; store info for the specific phone-id in the db
+    [db [_ response]]
+    (assoc db :auth-jwt (:jwt response))))
+
+(register-handler
+  :login-failed
+  (fn
+    ;; store info for the specific phone-id in the db
+    [db [_ response]]
+    (pr response)
+    db))
+
+(register-handler
+  :get-balance
+  [debug]
+  (fn [db [_ jwt]]
+    (ajax/POST "http://127.0.0.1:3001/user/balance" {:headers        {"Authorization" (str "Bearer " jwt)}
+                                                   :response-format  :json
+                                                   :keywords?        true
+                                                   :prefix           true
+                                                   :handler          #(dispatch [:get-balance-ok %1])
+                                                   :error-handler    #(dispatch [:get-balance-failed %1])})
+    db))
+
+(register-handler
+  :get-balance-ok
+  [debug]
+  (fn
+    ;; store info for the specific phone-id in the db
+    [db [_ response]]
+    (let [rsp (js/jwt_decode (:jwt response))]
+    (pr  (.. rsp -balance))
+;    (pr (b64/decodeString (second (clojure.string/split (:jwt response) #"\." ) )))
+    db)))
+
+(register-handler
+  :get-balance-failed
+  (fn
+    ;; store info for the specific phone-id in the db
+    [db [_ response]]
+    (pr response)
+    db))
