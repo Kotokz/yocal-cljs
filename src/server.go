@@ -15,8 +15,8 @@ type User struct {
 	Pass string `json: "pass"`
 }
 type Login struct {
-	Name string `json: "name" binding: "required"`
-	Pass string `json: "pass" binding: "required"`
+	Username string `json: "username" binding: "required"`
+	Password string `json: "password" binding: "required"`
 }
 
 var (
@@ -40,11 +40,12 @@ func main() {
 	router.POST("/user/token", func(c *gin.Context) {
 		var login Login
 		val := c.Bind(&login)
+		fmt.Println(login.Username + " " + login.Password )
 		if val != nil {
-			c.JSON(200, gin.H{"code": 401, "msg": "Both name & password are required"})
+			c.JSON(401, gin.H{"code": 401, "msg": "Both name & password are required"})
 			return
 		}
-		if login.Name == validUser.Name && login.Pass == validUser.Pass {
+		if login.Username == validUser.Name && login.Password == validUser.Pass {
 			token := jwt.New(jwt.SigningMethodHS256)
 			// Headers
 			token.Header["alg"] = "HS256"
@@ -61,7 +62,7 @@ func main() {
 			}
 			c.JSON(200, gin.H{"code": 200, "msg": "OK", "jwt": tokenString})
 		} else {
-			c.JSON(200, gin.H{"code": 400, "msg": "Error username or password!"})
+			c.JSON(400, gin.H{"code": 400, "msg": "Error username or password!"})
 		}
 	})
 

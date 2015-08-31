@@ -18,7 +18,7 @@
 
 (defn login-form-view
   []
-   (let [jwt @(re-frame/subscribe [:auth-jwt])]
+   (let [jwt (:jwt @(re-frame/subscribe [:user]))]
     (v/form credentials {:key "form"}
       (f/group-title {:class "group-title-main" :key "title"} "Please login with your user name")
       (v/text {:key "login"} "Login" data [:username] :placeholder "Enter login")

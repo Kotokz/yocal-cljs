@@ -22,6 +22,11 @@
                       debug
                       trim-v          ;; remove event id from event vec
                       ])
+(def auth-middleware [check-schema-mw ;; after ever event handler make sure the schema is still valid
+                      (path :user)
+                      debug
+                      trim-v          ;; remove event id from event vec
+                      ])
 
 ;; -- Helpers -----------------------------------------------------------------
 (defn auth-header [crets]
@@ -77,8 +82,8 @@
 
 (register-handler
   :login
-  [debug]
-  (fn [db [_ crets]]
+  auth-middleware
+  (fn [user [crets]]
     (ajax/POST "http://127.0.0.1:3001/user/token" {:headers        {;"Authorization" (auth-header crets)
                                                                      "X-Requested-With" "XMLHttpRequest"}
                                                    :params crets
@@ -88,14 +93,15 @@
                                                    :prefix           true
                                                    :handler          #(dispatch [:login-response %1])
                                                    :error-handler    #(dispatch [:login-failed %1])})
-    db))
+    user))
 
 (register-handler
   :login-response
+  auth-middleware
   (fn
     ;; store info for the specific phone-id in the db
-    [db [_ response]]
-    (assoc db :auth-jwt (:jwt response))))
+    [user [response]]
+    (assoc user :jwt (:jwt response))))
 
 (register-handler
   :login-failed
@@ -107,26 +113,26 @@
 
 (register-handler
   :get-balance
-  [debug]
-  (fn [db [_ jwt]]
+  auth-middleware
+  (fn [user [jwt]]
     (ajax/POST "http://127.0.0.1:3001/user/balance" {:headers        {"Authorization" (str "Bearer " jwt)}
                                                    :response-format  :json
                                                    :keywords?        true
                                                    :prefix           true
                                                    :handler          #(dispatch [:get-balance-ok %1])
                                                    :error-handler    #(dispatch [:get-balance-failed %1])})
-    db))
+    user))
 
 (register-handler
   :get-balance-ok
-  [debug]
+  auth-middleware
   (fn
     ;; store info for the specific phone-id in the db
-    [db [_ response]]
+    [user [response]]
     (let [rsp (js/jwt_decode (:jwt response))]
     (pr  (.. rsp -balance))
 ;    (pr (b64/decodeString (second (clojure.string/split (:jwt response) #"\." ) )))
-    db)))
+    user)))
 
 (register-handler
   :get-balance-failed

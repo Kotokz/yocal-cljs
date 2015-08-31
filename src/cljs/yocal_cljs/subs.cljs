@@ -38,6 +38,6 @@
   (reaction (:game-score-string @db))))
 
 (re-frame/register-sub
-  :auth-jwt
+  :user
   (fn [db _]
-    (reaction (:auth-jwt @db))))
+    (reaction (:user @db))))

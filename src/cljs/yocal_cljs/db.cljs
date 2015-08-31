@@ -25,7 +25,11 @@
      ;; The String for the game score pattern
      :game-score-string s/Str
      ;;
-     :active-panel (s/enum :home-panel :about-panel :login-panel "")})
+     :active-panel (s/enum :home-panel :about-panel :login-panel "")
+
+     :user {:username s/Str :authenticated s/Bool :jwt s/Str}
+
+     :login-form {:is-loading s/Bool}})
 
 ;; -- Default app-db Value  ---------------------------------------------------
 ;;
@@ -38,7 +42,11 @@
    :game-score 0
    :game-rolls 0
    :game-score-string "Please start the game"
-   :active-panel ""})
+   :active-panel ""
+   :user {:username ""
+          :authenticated false
+          :jwt ""}
+   :login-form {:is-loading false}})
 
 ;; -- Local Storage  ----------------------------------------------------------
 ;;
