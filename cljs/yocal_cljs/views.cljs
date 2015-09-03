@@ -2,7 +2,7 @@
   (:require [re-frame.core :as re-frame]
             [reagent.core :as reagent]
             [re-com.util :refer [item-for-id]]
-            [re-com.core :refer [h-box gap label button hyperlink-href v-box title]]
+            [re-com.core :refer [h-box hyperlink-href v-box title]]
             [clojure.string :as str]
             [yocal-cljs.view.login :as login]
             [yocal-cljs.view.game-board :as game]
