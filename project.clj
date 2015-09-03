@@ -1,13 +1,13 @@
 (defproject yocal-cljs "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.7.0-RC1"]
                  [org.clojure/clojurescript "0.0-3308"]
-                 [reagent "0.5.0"]
+                 [reagent "0.5.1-rc2"]
                  [re-frame "0.4.1"]
+                 [reagent-forms "0.5.6"]
                  [re-com "0.6.1"]
                  [secretary "1.2.3"]
-                 [prismatic/schema "0.4.3"]
-                 [reagent-reforms "0.4.0-SNAPSHOT"]
-                 [cljs-ajax "0.3.13"]]
+                 [prismatic/schema "1.0.0"]
+                 [cljs-ajax "0.3.14"]]
 
   :source-paths ["src/clj"]
 

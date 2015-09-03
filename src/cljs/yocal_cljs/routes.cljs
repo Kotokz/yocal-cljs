@@ -14,10 +14,6 @@
        (secretary/dispatch! (.-token event))))
     (.setEnabled true)))
 
-(defn redirect-to
-  [resource]
-  (secretary/dispatch! resource)
-  (.setToken (History.) resource))
 
 (defn app-routes []
   (secretary/set-config! :prefix "#")

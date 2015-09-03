@@ -3,7 +3,8 @@
               [yocal-cljs.db :as db]
               [goog.crypt.base64 :as b64]
               [schema.core   :as s]
-              [ajax.core :as ajax]))
+              [ajax.core :as ajax]
+              [yocal-cljs.view.login :as login]))
 
 ;; -- Middleware --------------------------------------------------------------
 ;;
@@ -108,7 +109,7 @@
   (fn
     ;; store info for the specific phone-id in the db
     [db [_ response]]
-    (pr response)
+    (swap! login/login-form-data assoc-in [:errors :other] (get-in response [:response :msg]))
     db))
 
 (register-handler
