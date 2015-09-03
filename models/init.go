@@ -9,7 +9,7 @@ import (
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 
-	"git.oschina.net/kotokz/yocal/modules/setting"
+	"github.com/kotokz/yocal-cljs/modules/setting"
 	"os"
 	"path"
 )

@@ -8,7 +8,7 @@ import (
 
 	"github.com/lunny/log"
 
-	"git.oschina.net/kotokz/yocal/modules/utils"
+	"github.com/kotokz/yocal-cljs/modules/utils"
 )
 
 type User struct {
