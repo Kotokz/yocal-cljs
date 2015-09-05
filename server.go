@@ -7,6 +7,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/kotokz/yocal-cljs/modules/setting"
 )
 
 type User struct {

@@ -34,16 +34,15 @@
 ;; When the application first starts, this will be the value put in app-db
 ;; Look in core.cljs for  "(dispatch-sync [:initialise-db])"
 ;;
-(def default-db
-  {:name "YoCal"
-   :game-dices (sorted-map)
-   :game-score 0
-   :game-rolls 0
-   :game-score-string "Please start the game"
-   :active-panel ""
-   :user {:username ""
-          :authenticated false
-          :jwt ""}})
+(def default-db {:name "YoCal"
+                 :game-dices (sorted-map)
+                 :game-score 0
+                 :game-rolls 0
+                 :game-score-string "Please start the game"
+                 :active-panel ""
+                 :user {:username ""
+                        :authenticated false
+                        :jwt ""}})
 
 ;; -- Local Storage  ----------------------------------------------------------
 ;;
