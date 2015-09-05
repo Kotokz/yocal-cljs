@@ -3,22 +3,21 @@ package setting
 import (
 	"io"
 	"os"
-	"strings"
 
-	"github.com/Unknwon/com"
 	"github.com/lunny/log"
 	"gopkg.in/ini.v1"
+	"github.com/gin-gonic/gin"
 )
 
 const (
-	CFG_PATH        = "conf/yocal.ini"
+	CFG_PATH        = "config/yocal.ini"
 )
 
 type App struct {
 	AppName   string
 	AppVer    string
 	AppSubUrl string
-	HttpPort  int
+	HttpPort  string
 	Https     bool
 	HttpsCert string
 	HttpsKey  string
@@ -54,25 +53,26 @@ var (
 	Names      []string
 	Redirct    bool
 	LogIO      io.Writer
-	IsProdMode bool
+	GinMode    string
 )
 
 // init imports settings from yocao.ini file
 func init() {
 	var err error
 
-	f, err := os.Create("yocal.log")
-	if err != nil {
-		log.Panic("create log file failed:", err)
-	}
+//	f, err := os.Create("yocal.log")
+//	if err != nil {
+//		log.Panic("create log file failed:", err)
+//	}
 
-	LogIO = io.MultiWriter(f, os.Stdout)
+//	LogIO = io.MultiWriter(f, os.Stdout)
+	LogIO = io.Writer(os.Stdout)
 	log.SetOutput(LogIO)
 
 	source := []interface{}{CFG_PATH}
 
 
-	Cfg, err := ini.Load([]byte("raw data"), source)
+	Cfg, err := ini.Load(source[0])
 	if err != nil {
 		log.Fatalf("Failed to set configuration: %v", err)
 	}
@@ -80,14 +80,14 @@ func init() {
 	// if run_mode not prod, then marcaron.Env will use default value (dev)
 	if Cfg.Section("").Key("RUN_MODE").MustString("dev") == "prod" {
 		log.SetOutputLevel(log.Linfo)
-		IsProdMode = true
+		GinMode = gin.ReleaseMode
 	} else {
 		log.SetOutputLevel(log.Ldebug)
-		IsProdMode = false
+		GinMode = gin.DebugMode
 	}
 
 	AppCfg = &App{
-		HttpPort: 8080,
+		HttpPort: ":8080",
 	}
 
 	err = Cfg.Section("app").MapTo(AppCfg)

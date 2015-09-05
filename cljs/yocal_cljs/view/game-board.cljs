@@ -85,30 +85,30 @@
 
 (defn dices [{:keys [id val isHeld]}]
   [:div.die-container {:on-click #(re-frame/dispatch [:hold-dice id])
-                       :class (if isHeld "isHeld")}
+                       :class    (if isHeld "isHeld")}
    [dice val]])
 
 (defn game-board []
   [h-box
    :gap "2em"
-   :children [ (let [jwt (:jwt @(re-frame/subscribe [:user]))]
-                 (if (str/blank? jwt) (re-frame/dispatch [:set-active-panel :login-panel])))
-               (let [ds (vals @(re-frame/subscribe [:game-dices]))]
-                 (if (-> ds count pos?)
-                   [h-box
-                    :children [(for [d ds]
-                                 ^{:key (:id d)} [dices d])
-                               [:button {:on-click #(roll-all ds)} "Roll Again"]
-                               [:button {:on-click #(re-frame/dispatch [:set-score-string (score ds)])} "Score"]]]
-                   [:button {:on-click #(roll-all ds)} "Start game"]))
-               (let [counts (re-frame/subscribe [:game-rolls])
-                     score (re-frame/subscribe [:game-score])
-                     score-string (re-frame/subscribe [:game-score-string])]
-                 [v-box
-                  :gap "2em"
-                  :children [
-                              [h-box
-                               :gap "2em"
-                               :children [[:div (str "Roll counts = " @counts)]
-                                          [:div (str "Game Score = " @score)]]]
-                              [title :level :level2 :label @score-string]]])]])
+   :children [(let [jwt (:jwt @(re-frame/subscribe [:user]))]
+                (if (str/blank? jwt) (re-frame/dispatch [:set-active-panel :login-panel])))
+              (let [ds (vals @(re-frame/subscribe [:game-dices]))]
+                (if (-> ds count pos?)
+                  [h-box
+                   :children [(for [d ds]
+                                ^{:key (:id d)} [dices d])
+                              [:button {:on-click #(roll-all ds)} "Roll Again"]
+                              [:button {:on-click #(re-frame/dispatch [:set-score-string (score ds)])} "Score"]]]
+                  [:button {:on-click #(roll-all ds)} "Start game"]))
+              (let [counts (re-frame/subscribe [:game-rolls])
+                    score (re-frame/subscribe [:game-score])
+                    score-string (re-frame/subscribe [:game-score-string])]
+                [v-box
+                 :gap "2em"
+                 :children [
+                            [h-box
+                             :gap "2em"
+                             :children [[:div (str "Roll counts = " @counts)]
+                                        [:div (str "Game Score = " @score)]]]
+                            [title :level :level2 :label @score-string]]])]])
