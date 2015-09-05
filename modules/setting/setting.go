@@ -4,13 +4,13 @@ import (
 	"io"
 	"os"
 
-	"github.com/lunny/log"
-	"gopkg.in/ini.v1"
+	log "github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/ini.v1"
 )
 
 const (
-	CFG_PATH        = "config/yocal.ini"
+	CFG_PATH = "config/yocal.ini"
 )
 
 type App struct {
@@ -48,29 +48,22 @@ var (
 	AppCfg    *App
 	DbCfg     *Db
 	CookieCfg *Cookie
-// Session settings.
-	Langs      []string
-	Names      []string
-	Redirct    bool
-	LogIO      io.Writer
-	GinMode    string
+	// Session settings.
+	Langs   []string
+	Names   []string
+	Redirct bool
+	LogIO   io.Writer
+	GinMode string
 )
 
 // init imports settings from yocao.ini file
 func init() {
 	var err error
 
-//	f, err := os.Create("yocal.log")
-//	if err != nil {
-//		log.Panic("create log file failed:", err)
-//	}
-
-//	LogIO = io.MultiWriter(f, os.Stdout)
 	LogIO = io.Writer(os.Stdout)
 	log.SetOutput(LogIO)
 
 	source := []interface{}{CFG_PATH}
-
 
 	Cfg, err := ini.Load(source[0])
 	if err != nil {
@@ -79,11 +72,15 @@ func init() {
 
 	// if run_mode not prod, then marcaron.Env will use default value (dev)
 	if Cfg.Section("").Key("RUN_MODE").MustString("dev") == "prod" {
-		log.SetOutputLevel(log.Linfo)
+		//log.SetOutputLevel(log.Linfo)
+		log.SetLevel(log.InfoLevel)
 		GinMode = gin.ReleaseMode
+		log.SetFormatter(new(log.JSONFormatter))
 	} else {
-		log.SetOutputLevel(log.Ldebug)
+		//		log.SetOutputLevel(log.Ldebug)
+		log.SetLevel(log.DebugLevel)
 		GinMode = gin.DebugMode
+		log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
 	}
 
 	AppCfg = &App{
@@ -120,4 +117,9 @@ func init() {
 		log.Fatalf("Failed to set app conf: %v", err)
 	}
 
+	log.WithFields(log.Fields{
+		"AppName": AppCfg.AppName,
+		"AppVer":  AppCfg.AppVer,
+		"RunMode": GinMode,
+	}).Info("Initializing")
 }

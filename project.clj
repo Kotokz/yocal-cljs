@@ -3,7 +3,7 @@
                  [org.clojure/clojurescript "0.0-3308"]
                  [reagent "0.5.1-rc2"]
                  [re-frame "0.4.1"]
-                 [reagent-forms "0.5.6"]
+                 [reagent-forms "0.5.7"]
                  [re-com "0.6.1"]
                  [secretary "1.2.3"]
                  [prismatic/schema "1.0.0"]

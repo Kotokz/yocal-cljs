@@ -2,26 +2,19 @@
   (:require [reagent.core :as ratom]
             [clojure.string :as str]
             [re-frame.core :as re-frame]
-            [reagent-forms.core :refer [bind-fields init-field value-of]]))
+            [reagent-forms.core :refer [bind-fields init-field value-of]]
+            [yocal-cljs.view.shared :refer [row input]]))
 
-(def login-form-data (ratom/atom {:user {:username ""
-                                         :password ""}
+(def login-form-data (ratom/atom {:user       {:username ""
+                                               :password ""}
                                   :is-loading false}))
-
-(defn row [label input]
-  [:div.row
-   [:div.col-md-2 [:label label]]
-   [:div.col-md-5 input]])
-
-(defn input [label type id]
-   (row label [:input.form-control {:field type :id id}]))
 
 (defn sign-in! []
   (let [name (get-in @login-form-data [:user :username])
         pwd (get-in @login-form-data [:user :password])]
     (cond
-      (empty? name) (swap! login-form-data assoc-in [:errors :username] "user name is empty")
-      (empty? pwd) (swap! login-form-data assoc-in [:errors :password] "password is empty")
+      (empty? name) (swap! login-form-data assoc-in [:errors :username] "User name is empty")
+      (empty? pwd) (swap! login-form-data assoc-in [:errors :password] "Password is empty")
       :else (re-frame/dispatch [:login (:user @login-form-data)]))))
 
 (def form-login
