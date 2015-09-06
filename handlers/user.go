@@ -47,7 +47,7 @@ func Token(c *gin.Context) {
 		return
 	}
 
-	log.Debugf("User logged in : %v",user.FullName)
+	log.Debugf("User logged in : %v", user.FullName)
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	// Headers
