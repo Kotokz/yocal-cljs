@@ -1,22 +1,24 @@
 package forms
+
 import (
 	"strings"
-	"gopkg.in/bluesuncorp/validator.v5"
+
 	log "github.com/Sirupsen/logrus"
+	"gopkg.in/bluesuncorp/validator.v5"
 )
 
 type RegisterForm struct {
 	Username string `json:"username" binding:"required,min=5,max=35,excludesall= !@#?"`
-	FullName  string `json:"fullname" binding:"required,min=5,max=35"`
-	Staffid   int    `json:"staffid" binding:"required,number"`
-	Email     string `json:"email" binding:"required,email,max=50"`
-	Password  string `json:"password" binding:"required,min=6,max=255"`
-	Retype    string `json:"retype" binding:"required,min=6,max=255,eqfield=Password"`
+	FullName string `json:"fullname" binding:"required,min=5,max=35"`
+	Staffid  int    `json:"staffid" binding:"required"`
+	Email    string `json:"email" binding:"required,email,max=50"`
+	Password string `json:"password" binding:"required,min=6,max=255"`
+	Retype   string `json:"retype" binding:"required,min=6,max=255,eqfield=Password"`
 }
 
 type LoginForm struct {
 	Username string `json:"username" binding:"required,min=5,max=35,excludesall= !@#?"`
-	Password  string `json:"password" binding:"required,min=6"`
+	Password string `json:"password" binding:"required,min=6"`
 	//Remember  bool   `json:"remember"`
 }
 
@@ -47,7 +49,7 @@ func ParseFormErrors(val interface{}) map[string]string {
 		}
 		return out
 	} else {
-		out := make(map[string]string,1)
+		out := make(map[string]string, 1)
 		out["other"] = "Invalid Format"
 		return out
 	}

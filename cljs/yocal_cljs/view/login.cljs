@@ -3,7 +3,8 @@
             [clojure.string :as str]
             [re-frame.core :as re-frame]
             [reagent-forms.core :refer [bind-fields init-field value-of]]
-            [yocal-cljs.view.shared :refer [row input]]))
+            [yocal-cljs.view.shared :refer [row input]]
+            [secretary.core :as secretary]))
 
 (def login-form-data (ratom/atom {:user       {:username ""
                                                :password ""}
@@ -40,7 +41,7 @@
   (fn []
     (let [isloading (:is-loading @login-form-data)
           jwt (:jwt @(re-frame/subscribe [:user]))]
-      (if-not (str/blank? jwt) (re-frame/dispatch [:set-active-panel :home-panel]) (pr "blank jwt"))
+      (if-not (str/blank? jwt) (secretary/dispatch! "/home") (pr "blank jwt"))
       [:div.col-md-6
        [:div.padding]
        [:div.page-header [:h1 "Login Form"]]

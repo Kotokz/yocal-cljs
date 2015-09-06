@@ -12,6 +12,7 @@ import (
 	"github.com/kotokz/yocal-cljs/modules/setting"
 	"os"
 	"path"
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -55,9 +56,10 @@ func init() {
 	orm.SetMaxIdleConns(setting.DbCfg.MaxIdle)
 	orm.SetMaxOpenConns(setting.DbCfg.MaxOpen)
 
-	if !setting.IsProdMode {
+	if setting.GinMode == gin.DebugMode{
 		orm.ShowSQL = true
 	}
+
 	if setting.DbCfg.DebugLog {
 		orm.ShowDebug = true
 		orm.ShowWarn = true

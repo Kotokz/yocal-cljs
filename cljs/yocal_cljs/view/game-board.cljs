@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [re-frame.core :as re-frame]
             [re-com.util :refer [item-for-id]]
+            [secretary.core :as secretary]
             [re-com.core :refer [h-box gap label button v-box title]]))
 
 ;; ------------------ game board ---------------------------------------------
@@ -92,7 +93,7 @@
   [h-box
    :gap "2em"
    :children [(let [jwt (:jwt @(re-frame/subscribe [:user]))]
-                (if (str/blank? jwt) (re-frame/dispatch [:set-active-panel :login-panel])))
+                (if (str/blank? jwt) (secretary/dispatch! "/")))
               (let [ds (vals @(re-frame/subscribe [:game-dices]))]
                 (if (-> ds count pos?)
                   [h-box

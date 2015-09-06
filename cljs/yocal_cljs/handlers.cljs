@@ -3,8 +3,9 @@
             [yocal-cljs.db :as db]
             [goog.crypt.base64 :as b64]
             [schema.core :as s]
-            [ajax.core :as ajax]
+            [ajax.core :as aj]
             [yocal-cljs.view.login :as login]
+            [secretary.core :as secretary]
             [yocal-cljs.view.signup :as register]))
 
 ;; -- Middleware --------------------------------------------------------------
@@ -79,7 +80,7 @@
 (register-handler
   :set-score-string
   [(path :game-score-string) debug trim-v]
-  (fn [game-score-string [text]]
+  (fn [_ [text]]
     text))
 
 ;;-- Login hanlder ----------------------------------------------------------------------
@@ -88,7 +89,7 @@
   auth-middleware
   (fn [user [crets]]
     (swap! login/login-form-data update-in [:is-loading] not)
-    (ajax/POST "http://127.0.0.1:3001/user/token" {:headers         {;"Authorization" (auth-header crets)
+    (aj/POST "http://127.0.0.1:3001/user/token" {:headers         {;"Authorization" (auth-header crets)
                                                                 "X-Requested-With" "XMLHttpRequest"}
                                               :params          crets
                                               :format          :json
@@ -116,7 +117,6 @@
     [user [response]]
     (let [errs (get-in response [:response :errors])]
       (swap! login/login-form-data update-in [:is-loading] not)
-      ;(swap! login/login-form-data assoc-in [:errors :other] (get-in response [:response :msg]))
       (swap! login/login-form-data assoc :errors errs)
       (swap! login/login-form-data assoc-in [:errors :other] (get-in response [:response :msg])))
     user))
@@ -128,7 +128,7 @@
   auth-middleware
   (fn [user [crets]]
     (swap! register/signup-form-data update-in [:is-loading] not)
-    (ajax/POST "http://127.0.0.1:3001/user/register" {:headers         {;"Authorization" (auth-header crets)
+    (aj/POST "http://127.0.0.1:3001/user/register" {:headers         {;"Authorization" (auth-header crets)
                                                                         "X-Requested-With" "XMLHttpRequest"}
                                                       :params          crets
                                                       :format          :json
@@ -144,9 +144,9 @@
   auth-middleware
   (fn
     ;; store info for the specific phone-id in the db
-    [user [response]]
+    [user [_]]
     (swap! register/signup-form-data update-in [:is-loading] not)
-    (pr response)
+    (secretary/dispatch! "/")
     user))
 
 (register-handler
@@ -167,7 +167,7 @@
   :get-balance
   auth-middleware
   (fn [user [jwt]]
-    (ajax/POST "http://127.0.0.1:3001/api/balance" {:headers         {"Authorization" (str "Bearer " jwt)}
+    (aj/POST "http://127.0.0.1:3001/api/balance" {:headers         {"Authorization" (str "Bearer " jwt)}
                                                      :response-format :json
                                                      :keywords?       true
                                                      :prefix          true
