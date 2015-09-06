@@ -30,20 +30,19 @@ func Token(c *gin.Context) {
 		//		var loginError forms.LoginForm
 		out := forms.ParseFormErrors(val)
 
-		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "msg": "input format incorrect",
-			"errors": out})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "input format incorrect", "errors": out})
 		return
 	}
 
 	// verify user
 	user, err := models.UserLogin(form.Username, form.Password)
 	if err != nil {
-		c.JSON(400, gin.H{"code": http.StatusUnauthorized, "msg": "Error username or password!"})
+		c.JSON(http.StatusUnauthorized, gin.H{"msg": "Error username or password!"})
 		return
 	}
 
 	if !user.IsActive {
-		c.JSON(400, gin.H{"code": http.StatusUnauthorized, "msg": "User cannot login"})
+		c.JSON(http.StatusUnauthorized, gin.H{"msg": "User cannot login"})
 		return
 	}
 
@@ -61,10 +60,10 @@ func Token(c *gin.Context) {
 	token.Claims["exp"] = time.Now().Add(time.Hour * 1).Unix()
 	tokenString, err := token.SignedString([]byte(MySigningKey))
 	if err != nil {
-		c.JSON(200, gin.H{"code": http.StatusInternalServerError, "msg": "Server error!"})
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Server error!"})
 		return
 	}
-	c.JSON(200, gin.H{"code": http.StatusOK, "msg": "OK", "jwt": tokenString})
+	c.JSON(http.StatusOK, gin.H{"msg": "OK", "jwt": tokenString})
 }
 
 func Register(c *gin.Context) {
@@ -74,7 +73,7 @@ func Register(c *gin.Context) {
 		//		var loginError forms.LoginForm
 		out := forms.ParseFormErrors(val)
 
-		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "msg": "input format incorrect",
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "input format incorrect",
 			"errors": out})
 		return
 	}
@@ -101,14 +100,14 @@ func Register(c *gin.Context) {
 		}
 		log.Errorf("Can't save user %v, %v", u, err)
 
-		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "msg": errMsg})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": errMsg})
 		return
 	}
 
 	log.Info(form)
-	c.JSON(200, gin.H{"code": http.StatusOK, "msg": "OK"})
+	c.JSON(http.StatusOK, gin.H{"msg": "OK"})
 }
 
 func Balance(c *gin.Context) {
-	c.JSON(200, gin.H{"code": http.StatusOK, "msg": "OK", "balance": 49})
+	c.JSON(http.StatusOK, gin.H{"msg": "OK", "balance": 49})
 }

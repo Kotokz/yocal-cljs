@@ -186,8 +186,9 @@
 
 (register-handler
   :get-balance-failed
+  auth-middleware
   (fn
     ;; store info for the specific phone-id in the db
-    [db [_ response]]
+    [user [response]]
     (pr response)
-    db))
+    (assoc user :jwt "")))
