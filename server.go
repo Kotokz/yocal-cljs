@@ -35,7 +35,6 @@ func main() {
 		user.POST("/register", handlers.Register)
 	}
 
-
 	authorized := r.Group("/api", middlewares.Auth(handlers.MySigningKey))
 
 	authorized.POST("/balance", handlers.Balance)
