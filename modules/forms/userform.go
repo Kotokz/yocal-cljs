@@ -8,7 +8,7 @@ import (
 type RegisterForm struct {
 	Username string `json:"username" binding:"required,min=5,max=35,excludesall= !@#?"`
 	FullName  string `json:"fullname" binding:"required,min=5,max=35"`
-	Staffid   int    `json:"staffid" binding:"required,len=8,number"`
+	Staffid   int    `json:"staffid" binding:"required,number"`
 	Email     string `json:"email" binding:"required,email,max=50"`
 	Password  string `json:"password" binding:"required,min=6,max=255"`
 	Retype    string `json:"retype" binding:"required,min=6,max=255,eqfield=Password"`
