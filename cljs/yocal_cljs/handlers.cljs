@@ -114,8 +114,11 @@
   (fn
     ;; store info for the specific phone-id in the db
     [user [response]]
-    (swap! login/login-form-data update-in [:is-loading] not)
-    (swap! login/login-form-data assoc-in [:errors :other] (get-in response [:response :msg]))
+    (let [errs (get-in response [:response :errors])]
+      (swap! login/login-form-data update-in [:is-loading] not)
+      ;(swap! login/login-form-data assoc-in [:errors :other] (get-in response [:response :msg]))
+      (swap! login/login-form-data assoc :errors errs)
+      (swap! login/login-form-data assoc-in [:errors :other] (get-in response [:response :msg])))
     user))
 
 ;;-- Register hanlder ----------------------------------------------------------------------
@@ -152,8 +155,10 @@
   (fn
     ;; store info for the specific phone-id in the db
     [user [response]]
-    (swap! register/signup-form-data update-in [:is-loading] not)
-    (swap! register/signup-form-data assoc-in [:errors :other] (get-in response [:response :msg]))
+    (let [errs (get-in response [:response :errors])]
+      (swap! register/signup-form-data update-in [:is-loading] not)
+      (swap! register/signup-form-data assoc :errors errs)
+      (swap! register/signup-form-data assoc-in [:errors :other] (get-in response [:response :msg])))
     user))
 
 ;;-- API hanlder ----------------------------------------------------------------------

@@ -7,3 +7,4 @@ out
 figwheel_server.log
 .idea
 .lein-failures
+yocal-cljs

@@ -7,17 +7,14 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+
+	"github.com/kotokz/yocal-cljs/modules/forms"
 )
 
 type User struct {
-	Name string `json: "name"`
-	Mail string `json: "mail"`
-	Pass string `json: "pass"`
-}
-
-type Login struct {
-	Username string `json:"username" binding:"required,min=7,max=7"`
-	Password string `json:"password" binding:"required,min=7"`
+	Name string `json:"name"`
+	Mail string `json:"mail"`
+	Pass string `json:"pass"`
 }
 
 var (
@@ -26,12 +23,15 @@ var (
 )
 
 func Token(c *gin.Context) {
-	var login Login
+	var login forms.LoginForm
 	val := c.Bind(&login)
 
 	if val != nil {
-		log.Info(val.Error())
-		c.JSON(401, gin.H{"code": http.StatusBadRequest, "msg": val.Error()})
+//		var loginError forms.LoginForm
+		out := forms.ParseFormErrors(val)
+
+		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "msg": "input format incorrect",
+			"errors":out})
 		return
 	}
 	log.Info("user name = "+login.Username)
@@ -57,7 +57,19 @@ func Token(c *gin.Context) {
 }
 
 func Register(c *gin.Context) {
+	var reg forms.RegisterForm
+	val := c.Bind(&reg)
+	if val != nil {
+		//		var loginError forms.LoginForm
+		out := forms.ParseFormErrors(val)
 
+		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "msg": "input format incorrect",
+			"errors":out})
+		return
+	}
+
+	log.Info(reg)
+	c.JSON(200, gin.H{"code": http.StatusOK, "msg": "OK"})
 }
 
 

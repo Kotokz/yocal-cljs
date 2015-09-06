@@ -25,7 +25,7 @@
              ;; The String for the game score pattern
              :game-score-string s/Str
              ;;
-             :active-panel      (s/enum :home-panel :about-panel :login-panel "")
+             :active-panel      (s/enum :home-panel :about-panel :login-panel :signup-panel "")
 
              :user              {:username s/Str :authenticated s/Bool :jwt s/Str}})
 
