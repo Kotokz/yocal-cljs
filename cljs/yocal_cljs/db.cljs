@@ -54,9 +54,9 @@
   (some->> (.getItem js/localStorage lsk)
            (cljs.reader/read-string)                        ;; stored as an EDN map.
            (into (sorted-map))                              ;; map -> sorted-map
-           (hash-map :game-dices)))                         ;; access via the :todos key
+           (hash-map :user)))                         ;; access via the :todos key
 
-(defn todos->ls!
+(defn yocal->ls!
   "Puts todos into localStorage"
-  [game-dices]
-  (.setItem js/localStorage lsk (str game-dices)))          ;; sorted-map writen as an EDN map
+  [user]
+  (.setItem js/localStorage lsk (str user)))          ;; sorted-map writen as an EDN map

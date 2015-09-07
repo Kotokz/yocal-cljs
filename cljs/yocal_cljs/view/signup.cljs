@@ -86,7 +86,7 @@
       (if-not (str/blank? jwt) (secretary/dispatch! "/home") (pr "blank jwt"))
       [:div.col-md-6
        [:div.padding]
-       [:div.page-header [:h1 "Register Form"]]
+       [:div.page-header [:h1 "Registration Form"]]
        [bind-fields
         form-login
         signup-form-data]
