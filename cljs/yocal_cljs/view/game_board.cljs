@@ -1,4 +1,4 @@
-(ns yocal-cljs.view.game-board
+(ns yocal-cljs.view.game_board
   (:require [clojure.string :as str]
             [re-frame.core :as re-frame]
             [re-com.util :refer [item-for-id]]

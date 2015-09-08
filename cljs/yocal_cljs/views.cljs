@@ -4,7 +4,7 @@
             [re-com.core :refer [h-box hyperlink-href v-box title]]
             [clojure.string :as str]
             [yocal-cljs.view.login :as login]
-            [yocal-cljs.view.game-board :as game]
+            [yocal-cljs.view.game_board :as game]
             [yocal-cljs.view.signup :as signup]))
 
 

@@ -13,7 +13,6 @@
 
              ;; a sorted-map is used to hold the dices.
              :game-dices        (s/both PersistentTreeMap   ;; ensure sorted-map, not just map
-                                        ;; each todo is keyed by its integer :id value
                                         {s/Int {:id s/Int :val s/Int :isHeld s/Bool}})
 
              ;; Keep the score for Dice Game
